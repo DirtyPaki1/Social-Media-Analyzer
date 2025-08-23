@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 23 23 23;
+    --primary: 99 102 241;
+    --secondary: 168 85 247;
+    --accent: 236 72 153;
+    --border: 214 219 220;
+    --muted: 239 239 239;
+    --muted-foreground: 115 115 115;
+  }
+
+  .dark {
+    --background: 10 10 10;
+    --foreground: 237 237 237;
+    --primary: 79 70 229;
+    --secondary: 139 92 246;
+    --accent: 219 39 119;
+    --border: 40 40 40;
+    --muted: 30 30 30;
+    --muted-foreground: 180 180 180;
+  }
+
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gradient-to-b from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 rounded-full;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-2 rounded-lg font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
+  }
+
+  .card {
+    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 transition-all hover:shadow-xl;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400;
+  }
+
+  .bg-grid {
+    background-image: linear-gradient(to right, rgba(128, 128, 128, 0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(128, 128, 128, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
