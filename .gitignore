@@ -1,0 +1,14 @@
+# Node.js
+node_modules/
+.next/
+dist/
+build/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# OS junk
+.DS_Store
+
