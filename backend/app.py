@@ -2,24 +2,17 @@ import os
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import time
 from datetime import datetime
 
-# Load environment variables
-from dotenv import load_dotenv
-load_dotenv()
-
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-# Load keys from environment
 TWITTER_BEARER_TOKEN = os.getenv("TWITTER_BEARER_TOKEN")
 NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
 
 TWITTER_URL = "https://api.twitter.com/2/tweets/search/recent"
 NEWSAPI_URL = "https://newsapi.org/v2/everything"
 
-# Mock data
 MOCK_TWEETS = [
     {
         "id": "1",

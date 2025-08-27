@@ -24,15 +24,18 @@ interface Article {
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState({ tweets: [], articles: [] });
+  const [results, setResults] = useState<{ tweets: Tweet[], articles: Article[] }>({ tweets: [], articles: [] });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSearch = async () => {
     if (!query.trim()) return;
 
     setLoading(true);
+    setError("");
     try {
-      const response = await fetch("http://localhost:5000/api/search", {
+      // Update this URL to your deployed backend URL
+      const response = await fetch("https://your-backend-domain.vercel.app/api/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,16 +44,19 @@ export default function SearchPage() {
       });
 
       const data = await response.json();
-      setResults(data);
+      if (response.ok) {
+        setResults(data);
+      } else {
+        setError(data.error || "Failed to fetch results");
+      }
     } catch (error) {
       console.error("Search error:", error);
-      // Fallback to empty results on error
-      setResults({ tweets: [], articles: [] });
+      setError("Failed to connect to the server");
     }
     setLoading(false);
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
     }
@@ -77,6 +83,12 @@ export default function SearchPage() {
           {loading ? "Searching..." : "Search"}
         </button>
       </div>
+
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+          {error}
+        </div>
+      )}
 
       {/* Tweets Section */}
       {results.tweets.length > 0 && (
@@ -145,9 +157,15 @@ export default function SearchPage() {
         </div>
       )}
 
-      {results.tweets.length === 0 && results.articles.length === 0 && !loading && (
+      {!loading && results.tweets.length === 0 && results.articles.length === 0 && query && (
         <div className="text-center text-gray-500 py-12">
-          <p>No results yet. Enter a search term to find tweets and news articles.</p>
+          <p>No results found for "{query}". Try a different search term.</p>
+        </div>
+      )}
+
+      {!loading && !query && (
+        <div className="text-center text-gray-500 py-12">
+          <p>Enter a search term to find tweets and news articles.</p>
         </div>
       )}
     </div>
