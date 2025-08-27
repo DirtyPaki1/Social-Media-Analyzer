@@ -1,11 +1,16 @@
+# app.py (backend)
 import os
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Enable CORS for all routes
 
 TWITTER_BEARER_TOKEN = os.getenv("TWITTER_BEARER_TOKEN")
 NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
@@ -56,20 +61,32 @@ def search():
                     "query": query,
                     "tweet.fields": "author_id,created_at,text",
                     "max_results": 5,
+                    "expansions": "author_id",
+                    "user.fields": "name,username,profile_image_url"
                 }
                 response = requests.get(TWITTER_URL, headers=headers, params=params, timeout=10)
                 
                 if response.status_code == 200:
-                    tweets = response.json().get("data", [])
-                    twitter_data = [{
-                        "id": t["id"],
-                        "text": t["text"],
-                        "user": {"name": "Twitter User", "username": "user", "profile_image_url": "https://via.placeholder.com/50"},
-                        "images": ["https://via.placeholder.com/400x200"]
-                    } for t in tweets]
+                    data = response.json()
+                    tweets = data.get("data", [])
+                    users = {user["id"]: user for user in data.get("includes", {}).get("users", [])}
+                    
+                    twitter_data = []
+                    for t in tweets:
+                        author = users.get(t["author_id"], {})
+                        twitter_data.append({
+                            "id": t["id"],
+                            "text": t["text"],
+                            "user": {
+                                "name": author.get("name", "Unknown"),
+                                "username": author.get("username", "unknown"),
+                                "profile_image_url": author.get("profile_image_url", "https://via.placeholder.com/50")
+                            },
+                            "images": []
+                        })
                 else:
                     twitter_data = MOCK_TWEETS
-                    print(f"Twitter API error: {response.status_code}")
+                    print(f"Twitter API error: {response.status_code} - {response.text}")
             except Exception as e:
                 twitter_data = MOCK_TWEETS
                 print(f"Twitter API exception: {str(e)}")
@@ -84,7 +101,8 @@ def search():
                 params = {
                     "q": query,
                     "apiKey": NEWSAPI_KEY,
-                    "pageSize": 5
+                    "pageSize": 5,
+                    "sortBy": "publishedAt"
                 }
                 response = requests.get(NEWSAPI_URL, params=params, timeout=10)
                 
@@ -100,7 +118,7 @@ def search():
                     } for a in articles]
                 else:
                     news_data = MOCK_ARTICLES
-                    print(f"News API error: {response.status_code}")
+                    print(f"News API error: {response.status_code} - {response.text}")
             except Exception as e:
                 news_data = MOCK_ARTICLES
                 print(f"News API exception: {str(e)}")

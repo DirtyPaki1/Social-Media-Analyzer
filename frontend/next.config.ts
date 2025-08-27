@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://your-backend-domain.vercel.app/api/:path*',
+        destination: process.env.NEXT_PUBLIC_API_URL + '/api/:path*',
       },
     ];
   },

@@ -4,57 +4,77 @@
 
 @layer base {
   :root {
-    --background: 255 255 255;
-    --foreground: 23 23 23;
-    --primary: 99 102 241;
-    --secondary: 168 85 247;
-    --accent: 236 72 153;
-    --border: 214 219 220;
-    --muted: 239 239 239;
-    --muted-foreground: 115 115 115;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+    --primary: 243 75% 59%;
+    --secondary: 271 91% 65%;
+    --accent: 330 81% 60%;
+    --border: 210 17% 93%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 45%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --radius: 0.5rem;
   }
 
   .dark {
-    --background: 10 10 10;
-    --foreground: 237 237 237;
-    --primary: 79 70 229;
-    --secondary: 139 92 246;
-    --accent: 219 39 119;
-    --border: 40 40 40;
-    --muted: 30 30 30;
-    --muted-foreground: 180 180 180;
+    --background: 0 0% 4%;
+    --foreground: 0 0% 93%;
+    --primary: 243 75% 59%;
+    --secondary: 271 81% 56%;
+    --accent: 330 81% 60%;
+    --border: 0 0% 16%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 71%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 93%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 93%;
   }
 
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
-    @apply w-2 h-2;
+    width: 8px;
+    height: 8px;
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-800;
+    background-color: hsl(var(--muted));
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-gradient-to-b from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 rounded-full;
+    background: linear-gradient(to bottom, hsl(var(--primary)), hsl(var(--secondary)));
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, hsl(var(--primary) / 0.8), hsl(var(--secondary) / 0.8));
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-2 rounded-lg font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
+    @apply px-6 py-3 rounded-lg font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
   }
 
   .card {
-    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 transition-all hover:shadow-xl;
+    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-800 transition-all hover:shadow-xl;
+  }
+
+  .glass {
+    @apply bg-white/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-white/10;
   }
 }
 
@@ -85,5 +105,17 @@
     background-image: linear-gradient(to right, rgba(128, 128, 128, 0.05) 1px, transparent 1px),
                       linear-gradient(to bottom, rgba(128, 128, 128, 0.05) 1px, transparent 1px);
     background-size: 24px 24px;
+  }
+  
+  .border-border {
+    border-color: hsl(var(--border));
+  }
+  
+  .bg-background {
+    background-color: hsl(var(--background));
+  }
+  
+  .text-foreground {
+    color: hsl(var(--foreground));
   }
 }
